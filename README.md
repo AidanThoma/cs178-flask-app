@@ -1,4 +1,4 @@
-# Aidan Thoma Project [Rename this]
+# Thoma's Webstore
 
 **CS178: Cloud and Database Systems — Project #1**
 **Author:** [Your Name]
