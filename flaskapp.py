@@ -4,27 +4,49 @@
 
 from flask import Flask
 from flask import render_template
-from flask import Flask, render_template, request, redirect, url_for, flash
-from dbCode import *
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+import dbCode
+import creds
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key' # this is an artifact for using flash displays; 
-                                   # it is required, but you can leave this alone
+app.secret_key = creds.secret_key
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        # Get the data submitted from the form
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Hardcoded check for simplicity (you can connect this to a DB later!)
+        if username == 'admin' and password == 'password123':
+            # Store the user in the session to "remember" they are logged in
+            session['logged_in'] = True
+            session['username'] = username
+            # Redirect them to the main inventory page
+            return redirect(url_for('display_inventory'))
+        else:
+            error = 'Invalid Credentials. Please try again.'
+            
+    # If it's a GET request, just show the login page
+    return render_template('login.html', error=error)
+
 @app.route('/add-user', methods=['GET', 'POST'])
 def add_user():
     if request.method == 'POST':
         # Extract form data
-        name = request.form['name']
+        fname = request.form['fname']
+        lname = request.form['lname']
         genre = request.form['genre']
         
         # Process the data (e.g., add it to a database)
         # For now, let's just print it to the console
-        print("Name:", name, ":", "Favorite Genre:", genre)
+        print("First name:", fname, "Last name:", lname, ":" "Favorite Genre:", genre)
         
         flash('User added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
         # Redirect to home page or another page upon successful submission
@@ -55,9 +77,32 @@ def delete_user():
 def display_users():
     # hard code a value to the users_list;
     # note that this could have been a result from an SQL query :) 
-    users_list = (('John','Doe','Comedy'),('Jane', 'Doe','Drama'))
-    return render_template('display_users.html', users = users_list)
+    query = "SELECT ID, description, price, categoryID FROM Inventory;"
 
+
+    inventory_data = dbCode.execute_query(query)
+
+    return render_template('displayusers.html', items=inventory_data)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # 1. Get the data from the registration form
+        new_username = request.form['username']
+        new_password = request.form['password']
+        
+        # 2. Write the SQL query to insert the new user
+        # Note: In a production app, you MUST encrypt/hash passwords before saving them!
+        query = "INSERT INTO users (username, password) VALUES (%s, %s);"
+        
+        # 3. Use your new helper function to save the data securely
+        dbCode.execute_insert(query, (new_username, new_password))
+        
+        # 4. Send them back to the login page so they can log in
+        return redirect(url_for('login'))
+        
+    # If it's a GET request, just show the form
+    return render_template('create_account.html')
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':
