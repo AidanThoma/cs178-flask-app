@@ -36,53 +36,14 @@ def login():
     # If it's a GET request, just show the login page
     return render_template('login.html', error=error)
 
-@app.route('/add-user', methods=['GET', 'POST'])
-def add_user():
-    if request.method == 'POST':
-        # Extract form data
-        fname = request.form['fname']
-        lname = request.form['lname']
-        genre = request.form['genre']
-        
-        # Process the data (e.g., add it to a database)
-        # For now, let's just print it to the console
-        print("First name:", fname, "Last name:", lname, ":" "Favorite Genre:", genre)
-        
-        flash('User added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
-        # Redirect to home page or another page upon successful submission
-        return redirect(url_for('home'))
-    else:
-        # Render the form page if the request method is GET
-        return render_template('add_user.html')
 
-@app.route('/delete-user',methods=['GET', 'POST'])
-def delete_user():
-    if request.method == 'POST':
-        # Extract form data
-        name = request.form['name']
-        
-        # Process the data (e.g., add it to a database)
-        # For now, let's just print it to the console
-        print("Name to delete:", name)
-        
-        flash('User deleted successfully! Hoorah!', 'warning') 
-        # Redirect to home page or another page upon successful submission
-        return redirect(url_for('home'))
-    else:
-        # Render the form page if the request method is GET
-        return render_template('delete_user.html')
-
-
-@app.route('/display-users')
+@app.route('/display-items')
 def display_users():
-    # hard code a value to the users_list;
-    # note that this could have been a result from an SQL query :) 
-    query = "SELECT ID, description, price, categoryID FROM Inventory;"
-
+    query = "SELECT * FROM Inventory;"
 
     inventory_data = dbCode.execute_query(query)
 
-    return render_template('displayusers.html', items=inventory_data)
+    return render_template('display_items.html', Inventory=inventory_data)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

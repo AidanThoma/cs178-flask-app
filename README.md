@@ -7,7 +7,7 @@
 ---
 
 ## Overview
-- This is a Amzaon like webstore where users have an account with their, name, balance, email, and previous purchases. This solves the same issue Amazon does which is the inconvience of shopping in person. This is created for people who don't have that much time on their hand to shop for themselves.
+- This is a Amzaon like webstore where users have an account with their, name, balance, and previous purchases. This solves the same issue Amazon does which is the inconvience of shopping in person. This is created for people who don't have that much time on their hand to shop for themselves.
 ---
 
 ## Technologies Used
@@ -68,7 +68,7 @@ ProjectOne/
 The app is deployed on an AWS EC2 instance. To view the live version:
 
 ```
-http://[your-ec2-public-ip]:8080
+http://107.22.149.216:8080
 ```
 
 _(Note: the EC2 instance may not be running after project submission.)_
@@ -99,8 +99,8 @@ db = "your-database-name"
 
 **Example:**
 
-- `[TableName]` — stores [description]; primary key is `[key]`
-- `[TableName]` — stores [description]; foreign key links to `[other table]`
+- `Inventory` — stores [ttems descriptions and price]; primary key is `ID`
+- `Category` — stores different categories; foreign key links to `Inventory`
 
 The JOIN query used in this project: <!-- describe it in plain English -->
 

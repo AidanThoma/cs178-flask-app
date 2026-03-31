@@ -5,6 +5,7 @@
 
 import pymysql
 import creds
+import boto3
 
 def get_conn():
     """Returns a connection to the MySQL RDS instance."""
@@ -23,3 +24,22 @@ def execute_query(query, args=()):
     rows = cur.fetchall()
     cur.close()
     return rows
+
+def scan_all_items(table_name):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(table_name)
+    all_items = []
+    scan_kwargs = {}
+
+    while True:
+        response = table.scan(**scan_kwargs)
+        all_items.extend(response.get('Items', []))
+        
+        # Check if there are more pages
+        if 'LastEvaluatedKey' not in response:
+            break
+            
+        # Set the exclusive start key for the next iteration
+        scan_kwargs['ExclusiveStartKey'] = response['LastEvaluatedKey']
+        
+    return all_items
