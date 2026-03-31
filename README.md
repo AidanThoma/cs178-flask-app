@@ -1,23 +1,21 @@
-# Aidan Thoma Project [Rename this]
+# Thoma's Webstore
 
 **CS178: Cloud and Database Systems — Project #1**
-**Author:** [Your Name]
-**GitHub:** [your-username]
+**Author:** Aidan Thoma
+**GitHub:** AidanThoma
 
 ---
 
 ## Overview
-
-<!-- Describe your project in 2-4 sentences. What does it do? Who is it for? What problem does it solve? -->
-
+- This is a Amzaon like webstore where users have an account with their, name, balance, email, and previous purchases. This solves the same issue Amazon does which is the inconvience of shopping in person. This is created for people who don't have that much time on their hand to shop for themselves.
 ---
 
 ## Technologies Used
 
 - **Flask** — Python web framework
 - **AWS EC2** — hosts the running Flask application
-- **AWS RDS (MySQL)** — relational database for [describe what you stored]
-- **AWS DynamoDB** — non-relational database for [describe what you stored]
+- **AWS RDS (MySQL)** — relational database for inventory and objects
+- **AWS DynamoDB** — non-relational database for user accounts
 - **GitHub Actions** — auto-deploys code from GitHub to EC2 on push
 
 ---
