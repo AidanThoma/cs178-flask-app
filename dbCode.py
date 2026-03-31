@@ -1,6 +1,7 @@
 # dbCode.py
 # Author: Your Name
 # Helper functions for database connection and queries
+#
 
 import pymysql
 import creds
