@@ -27,7 +27,7 @@ def execute_query(query, args=()):
 
 def scan_all_items(table_name):
     """Your existing function to get all items."""
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
     all_items = []
     scan_kwargs = {}
@@ -44,20 +44,20 @@ def scan_all_items(table_name):
     return all_items
 
 def add_user_to_dynamo(table_name, user_data):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
     
     table.put_item(Item=user_data)
 
 def delete_user_from_dynamo(table_name, uid):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
 
     table.delete_item(Key={'uID': uid})
 
 # I also had AI help edit this so I could get it working
 def update_user_in_dynamo(table_name, uid, new_username, new_email):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
     
     table.update_item(
@@ -71,7 +71,7 @@ def update_user_in_dynamo(table_name, uid, new_username, new_email):
 
 def get_user_from_dynamo(table_name, uid):
     """Fetches a single user's full record from DynamoDB."""
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
     response = table.get_item(Key={'uID': uid})
     return response.get('Item')
@@ -80,7 +80,7 @@ def add_item_to_user_in_dynamo(table_name, uid, item_id):
     if not uid or not item_id:
         return
 
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
     
     table.update_item(
@@ -110,7 +110,7 @@ def get_rds_items_by_ids(item_ids):
     return execute_query(query, tuple(int_ids))
 
 def remove_item_from_user_in_dynamo(table_name, uid, item_id):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table(table_name)
 
     response = table.get_item(Key={'uID': str(uid)})
