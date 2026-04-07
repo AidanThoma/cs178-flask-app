@@ -1,0 +1,16 @@
+<h1>Assign Item to User</h1>
+<form method="POST" action="{{ url_for('submit_assign_item') }}">
+    <div>
+        <label>User ID:</label>
+        <input type="text" name="uid" required>
+    </div>
+    <br>
+    <div>
+        <label>RDS Item ID:</label>
+        <input type="text" name="item_id" required>
+    </div>
+    <br>
+    <button type="submit">Assign Item</button>
+</form>
+<br>
+<a href="/">Cancel & Go Back</a>

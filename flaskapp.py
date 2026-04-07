@@ -88,6 +88,49 @@ def submit_edit_user():
 
     return redirect(url_for('view_users'))
 
+
+@app.route('/assign-item-page')
+def show_assign_item_form():
+    return render_template('assign_item.html')
+
+@app.route('/submit-assign-item', methods=['POST'])
+def submit_assign_item():
+    uid = request.form.get('uid') 
+    item_id = request.form.get('item_id')
+    
+    # Send it to the database function
+    dbCode.add_item_to_user_in_dynamo("Users", uid, item_id)
+    
+    return redirect('/')
+
+@app.route('/search-user-items-page')
+def show_search_user_items_form():
+    return render_template('search_user_items.html')
+
+@app.route('/view-user-items')
+def view_user_items():
+    uid = request.args.get('uid')
+
+    user = dbCode.get_user_from_dynamo("Users", uid)
+    if not user:
+        return "User not found!"
+
+    item_ids = user.get('items', [])
+    
+    full_items = dbCode.get_rds_items_by_ids(item_ids)
+    
+    return render_template('view_user_items.html', user=user, items=full_items)
+
+@app.route('/remove-item/<uid>/<item_id>')
+def remove_item(uid, item_id):
+    # This calls your dbCode logic
+    dbCode.remove_item_from_user_in_dynamo("Users", uid, item_id)
+    
+    flash(f"Item {item_id} removed successfully!")
+    
+    # Redirect back to the user's item list
+    return redirect(url_for('view_user_items', uid=uid))
+
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

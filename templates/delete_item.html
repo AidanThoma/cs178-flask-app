@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Removal</title>
+    <style>
+        .warning-box {
+            border: 2px solid #d9534f;
+            padding: 20px;
+            background-color: #fdf7f7;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .btn-delete { background-color: #d9534f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
+        .btn-cancel { background-color: #5bc0de; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="warning-box">
+        <h2>Confirm Removal</h2>
+        <p>Are you sure you want to remove the following item from <strong>{{ user.username }}</strong>?</p>
+        
+        <hr>
+        <p><strong>Item:</strong> {{ item.description }} (ID: {{ item.ID }})</p>
+        <p><strong>Category:</strong> {{ item.category_name }}</p>
+        <hr>
+        <br>
+        
+        <a href="{{ url_for('remove_item', uid=user.uID, item_id=item.ID) }}" class="btn-delete">Yes, Remove Item</a>
+        
+        <a href="{{ url_for('view_user_items', uid=user.uID) }}" class="btn-cancel">Cancel</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<h1>View a User's Items</h1>
+<form method="GET" action="{{ url_for('view_user_items') }}">
+    <div>
+        <label>Enter User ID:</label>
+        <input type="text" name="uid" required>
+    </div>
+    <br>
+    <button type="submit">View Their Items</button>
+    <a href="{{ url_for('show_assign_item_form') }}" class="btn btn-warning">Assign Item to User</a>
+</form>
+<br>
+<a href="/">Cancel & Go Back</a>

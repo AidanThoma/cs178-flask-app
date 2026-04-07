@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}'s Items</title>
+  </head>
+  <body>
+    <h1>Items belonging to {{ user.username }}</h1>
+    
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Item ID</th>
+          <th>Item Name</th>
+          <th>Category</th> 
+        </tr>
+      </thead>
+<tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.ID }}</td>
+            
+            <td>{{ item.description }}</td>
+            
+            <td>{{ item.category_name }}</td>
+            
+            <td>${{ item.price }}</td>
+
+            <td>
+                <a href="{{ url_for('remove_item', uid=user.uID, item_id=item.ID) }}" 
+                   style="color: red; font-weight: bold;">
+                   Remove
+                </a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5">This user has no items yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    <br>
+    <a href="{{ url_for('show_search_user_items_form') }}">Search Another User</a> | 
+    <a href="/assign-item-page">Add an Item to a User</a> |
+    <a href="/">Back to home</a>
+  </body>
+</html>
