@@ -1,0 +1,18 @@
+<h1>Create a New User</h1>
+
+<form method="POST" action="{{ url_for('submit_delete_user') }}">
+    
+    <div>
+        <label for="uid">Enter User ID to delete:</label>
+        <input type="text" id="uid" name="uid" required>
+    </div>
+    <br>
+    
+    <button type="submit">
+        Permanently Delete User
+    </button>
+
+</form>
+
+<br>
+<a href="/">Cancel & Go Back</a>

@@ -1,0 +1,30 @@
+<h1>Edit an Existing User</h1>
+
+<form method="POST" action="{{ url_for('submit_edit_user') }}">
+    
+    <div>
+        <label for="uid">Enter User ID to edit:</label>
+        <input type="text" id="uid" name="uid" required>
+    </div>
+    <br>
+    
+    <div>
+        <label for="username">New Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <br>
+    
+    <div>
+        <label for="email">New Email Address:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <br>
+    
+    <button type="submit" style="padding: 5px 10px; cursor: pointer;">
+        Update User
+    </button>
+
+</form>
+
+<br>
+<a href="{{ url_for('view_users') }}">Cancel & Go Back</a>

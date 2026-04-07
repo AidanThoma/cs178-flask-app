@@ -2,11 +2,10 @@
 # description: Flask example using redirect, url_for, and flash
 # credit: the template html files were constructed with the help of ChatGPT
 
-from flask import Flask
-from flask import render_template
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-import dbCode
+from flask import Flask, render_template, request, redirect, url_for, flash
 import creds
+import dbCode
+import uuid
 
 app = Flask(__name__)
 app.secret_key = creds.secret_key
@@ -15,55 +14,79 @@ app.secret_key = creds.secret_key
 def home():
     return render_template('home.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        # Get the data submitted from the form
-        username = request.form['username']
-        password = request.form['password']
-        
-        # Hardcoded check for simplicity (you can connect this to a DB later!)
-        if username == 'admin' and password == 'password123':
-            # Store the user in the session to "remember" they are logged in
-            session['logged_in'] = True
-            session['username'] = username
-            # Redirect them to the main inventory page
-            return redirect(url_for('display_inventory'))
-        else:
-            error = 'Invalid Credentials. Please try again.'
-            
-    # If it's a GET request, just show the login page
-    return render_template('login.html', error=error)
-
-
 @app.route('/display-items')
-def display_users():
+def display_items():
     query = "SELECT * FROM Inventory;"
 
     inventory_data = dbCode.execute_query(query)
 
     return render_template('display_items.html', Inventory=inventory_data)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        # 1. Get the data from the registration form
-        new_username = request.form['username']
-        new_password = request.form['password']
-        
-        # 2. Write the SQL query to insert the new user
-        # Note: In a production app, you MUST encrypt/hash passwords before saving them!
-        query = "INSERT INTO users (username, password) VALUES (%s, %s);"
-        
-        # 3. Use your new helper function to save the data securely
-        dbCode.execute_insert(query, (new_username, new_password))
-        
-        # 4. Send them back to the login page so they can log in
-        return redirect(url_for('login'))
-        
-    # If it's a GET request, just show the form
-    return render_template('create_account.html')
+@app.route('/sql-join')
+def display_items_joined():
+    query = "SELECT I.ID, I.description, I.price, C.categoryID, C.name  " \
+    "FROM Inventory I " \
+    "JOIN Category C ON I.categoryID = C.categoryID;" 
+    
+    joined_inventory_data = dbCode.execute_query(query)
+
+    return render_template('sql_join.html', Inventory=joined_inventory_data)
+
+@app.route('/view-users')
+def view_users():
+    TABLE_NAME = "Users"
+
+    users_list = dbCode.scan_all_items(TABLE_NAME)
+
+    return render_template('view_users.html', users=users_list)
+
+@app.route('/create-user-page')
+def show_create_user_form():
+    return render_template('create_user.html')
+
+# I had ai help me here to create a uuid
+@app.route('/submit-new-user', methods=['POST'])
+def submit_new_user():
+    username = request.form.get('username')
+    email = request.form.get('email')
+
+    new_user = {
+        'uID': str(uuid.uuid4()),
+        'username': username,
+        'email': email
+    }
+    
+    dbCode.add_user_to_dynamo("Users", new_user) 
+    
+    return redirect(url_for('view_users'))
+
+@app.route('/delete-user-page')
+def show_delete_user_form():
+    return render_template('delete_user.html')
+
+@app.route('/submit-delete-user', methods=['POST'])
+def submit_delete_user():
+    uid_to_delete = request.form.get('uid')
+
+    dbCode.delete_user_from_dynamo("Users", uid_to_delete) 
+    
+    return redirect(url_for('view_users'))
+
+
+@app.route('/edit-user-page')
+def show_edit_user_form():
+    return render_template('edit_user.html')
+
+
+@app.route('/submit-edit-user', methods=['POST'])
+def submit_edit_user():
+    uid_to_edit = request.form.get('uid')
+    new_username = request.form.get('username')
+    new_email = request.form.get('email')
+
+    dbCode.update_user_in_dynamo("Users", uid_to_edit, new_username, new_email) 
+
+    return redirect(url_for('view_users'))
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':

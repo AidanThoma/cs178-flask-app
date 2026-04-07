@@ -26,6 +26,7 @@ def execute_query(query, args=()):
     return rows
 
 def scan_all_items(table_name):
+    """Your existing function to get all items."""
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
     all_items = []
@@ -35,11 +36,35 @@ def scan_all_items(table_name):
         response = table.scan(**scan_kwargs)
         all_items.extend(response.get('Items', []))
         
-        # Check if there are more pages
         if 'LastEvaluatedKey' not in response:
             break
             
-        # Set the exclusive start key for the next iteration
         scan_kwargs['ExclusiveStartKey'] = response['LastEvaluatedKey']
         
     return all_items
+
+def add_user_to_dynamo(table_name, user_data):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(table_name)
+    
+    table.put_item(Item=user_data)
+
+def delete_user_from_dynamo(table_name, uid):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(table_name)
+
+    table.delete_item(Key={'uID': uid})
+
+# I also had AI help edit this so I could get it working
+def update_user_in_dynamo(table_name, uid, new_username, new_email):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(table_name)
+    
+    table.update_item(
+        Key={'uID': uid},
+        UpdateExpression="SET username = :val1, email = :val2",
+        ExpressionAttributeValues={
+            ':val1': new_username,
+            ':val2': new_email
+        }
+    )

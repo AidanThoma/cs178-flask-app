@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>View Users</title>
+  </head>
+  <body>
+    <h1>User Database</h1>
+        <a href="{{ url_for('show_create_user_form') }}">
+            <button>Add New User</button>
+        </a>
+        <a href="{{ url_for('show_delete_user_form') }}">
+            <button>Delete User</button>
+        </a>
+        <a href="{{ url_for('show_edit_user_form') }}">
+            <button>Edit User</button>
+        </a>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.uID }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+  </body>
+  <a href="/">Cancel & Go Back</a>
+</html>
