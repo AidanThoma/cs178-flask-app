@@ -7,7 +7,7 @@
 ---
 
 ## Overview
-- This is a Amzaon like webstore where users have an account with their, name, balance, and previous purchases. This solves the same issue Amazon does which is the inconvience of shopping in person. This is created for people who don't have that much time on their hand to shop for themselves.
+- This is user storage website which allows users to add to their list to see what they all have in their cart. This solves the problem of people having to keep track of what itmes blong to who and makes this process more easily scaleable.
 ---
 
 ## Technologies Used
@@ -108,9 +108,9 @@ The JOIN query used in this project: <!-- describe it in plain English -->
 
 <!-- Describe your DynamoDB table. What is the partition key? What attributes does each item have? How does it connect to the rest of the app? -->
 
-- **Table name:** `[your-table-name]`
-- **Partition key:** `[key-name]`
-- **Used for:** [description]
+- **Table name:** `Users`
+- **Partition key:** `uID`
+- **Used to:** keep track of names, emails, and what users have in their cart
 
 ---
 
@@ -118,19 +118,20 @@ The JOIN query used in this project: <!-- describe it in plain English -->
 
 | Operation | Route      | Description    |
 | --------- | ---------- | -------------- |
-| Create    | `/[route]` | [what it does] |
-| Read      | `/[route]` | [what it does] |
-| Update    | `/[route]` | [what it does] |
-| Delete    | `/[route]` | [what it does] |
+| Create    | `/remove_item_from_user_in_dynamo` | removes an item from a users list |
+| Read      | `/get_user_from_dynamo` | grabs information from a single user based off their uID |
+| Update    | `/update_user_in_dynamo` | allows user to change their name and email, but NOT their uID |
+| Delete    | `/remove_item_from_user_in_dynamo` | allows a user to remove an item from their list |
 
 ---
 
 ## Challenges and Insights
 
 <!-- What was the hardest part? What did you learn? Any interesting design decisions? -->
-
+The hardest part of this was definetly doing a qeury that involved both my RDS and DynamoDB. For this I grab the item ID from the DynamoDB and do a query on the RDS database to grab what that item is. Defiently would be easier and more effiecient if I just stored the data when I named it, but I'm lazy.
 ---
 
 ## AI Assistance
 
 <!-- List any AI tools you used (e.g., ChatGPT) and briefly describe what you used them for. Per course policy, AI use is allowed but must be cited in code comments and noted here. -->
+I used Google Gemini to help me a lot with the RDS and Dynamo query which I listed above. I also used it in some of my HTML pages for some simple debugging.
